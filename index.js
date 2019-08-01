@@ -11,8 +11,31 @@ process.on('SIGINT', () => {
   process.exit(1)
 })
 
+if (hasArg('--version', args) || hasArg('-v', args)) {
+  const { version } = require('package.json')
+  console.log('pkg-transfer:', version)
+
+  process.exit(0)
+}
+
+if (hasArg('--help', args) || hasArg('-h', args)) {
+  console.log('Usage: pkg-transfer [options]')
+  console.log('')
+  console.log('Options:')
+  console.log('  -v, --version              Print version')
+  console.log('  --verbose                  Increase logging verbosity')
+  console.log('  -h, --help                 Output help and usage information')
+  console.log('  -h, --help                 Output help and usage information')
+  console.log('  -s, --source               Source package (from where you want to transfer dependencies)')
+  console.log('  -t, --target               Target package (defaults to current directory)')
+  console.log('  --yarn                     Use yarn instead of npm')
+  console.log('  --dev                      Transfer devDependencies')
+
+  process.exit(0)
+}
+
 const verbose = hasArg('--verbose', args)
-const source = getArg('--source', args)
+const source = getArg('--source', args) || getArg('-s', args)
 if (!source) {
   console.warn('Specify source package path with --source')
 
@@ -21,7 +44,7 @@ if (!source) {
 
 try {
   const sourcePackage = getPackageJson(source)
-  const target = getArg('--target', args)
+  const target = getArg('--target', args) || getArg('-t', args)
 
   if (!target) {
     console.warn('Target package is not set!')

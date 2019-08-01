@@ -7,6 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "bin": {
+    "pkg-transfer": "./index.js",
     "package-transfer": "./index.js"
   },
   "repository": {
