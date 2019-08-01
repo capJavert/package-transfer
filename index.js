@@ -49,7 +49,7 @@ try {
   if (!target) {
     console.warn('Target package is not set!')
 
-    const pwd = path.join(__dirname, PACKAGE_META_FILE)
+    const pwd = path.join(process.cwd(), PACKAGE_META_FILE)
     if(fs.existsSync(pwd)) {
       const readline = require('readline').createInterface({
         input: process.stdin,

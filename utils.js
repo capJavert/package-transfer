@@ -10,11 +10,11 @@ const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./consts')
  */
 getPackageJson = packagePath => {
   if (packagePath === '.') {
-    return require(path.join(__dirname, PACKAGE_META_FILE))
+    return require(path.join(process.cwd(), PACKAGE_META_FILE))
   }
 
   return require(path.join(
-    path.isAbsolute(packagePath) ? '' : __dirname,
+    path.isAbsolute(packagePath) ? '' : process.cwd(),
     packagePath,
     packagePath.indexOf(PACKAGE_META_FILE) === -1 ? PACKAGE_META_FILE : '')
   )
