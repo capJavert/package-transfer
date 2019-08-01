@@ -93,6 +93,7 @@ const transferDependencies = (source, target, args = []) => {
       try {
         execSync(installCommand, { stdio: 'inherit' })
 
+        console.log('Transfer completed!')
         process.exit(0)
       } catch (e) {
         if (e.signal !== 'SIGINT') {
