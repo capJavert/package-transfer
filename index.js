@@ -12,7 +12,7 @@ process.on('SIGINT', () => {
 })
 
 if (hasArg('--version', args) || hasArg('-v', args)) {
-  const { version } = require('package.json')
+  const { version } = require('./package.json')
   console.log('pkg-transfer:', version)
 
   process.exit(0)
