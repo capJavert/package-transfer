@@ -25,7 +25,6 @@ if (hasArg('--help', args) || hasArg('-h', args)) {
   console.log('  -v, --version              Print version')
   console.log('  --verbose                  Increase logging verbosity')
   console.log('  -h, --help                 Output help and usage information')
-  console.log('  -h, --help                 Output help and usage information')
   console.log('  -s, --source               Source package (from where you want to transfer dependencies)')
   console.log('  -t, --target               Target package (defaults to current directory)')
   console.log('  --yarn                     Use yarn instead of npm')
