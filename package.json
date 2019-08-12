@@ -1,6 +1,6 @@
 {
   "name": "package-transfer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Simple utility to transfer packages from your dependencies or devDependencies lists into new project.",
   "main": "index.js",
   "scripts": {
