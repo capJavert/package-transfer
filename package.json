@@ -22,5 +22,8 @@
   "bugs": {
     "url": "https://github.com/capJavert/package-transfer/issues"
   },
-  "homepage": "https://github.com/capJavert/package-transfer#readme"
+  "homepage": "https://github.com/capJavert/package-transfer#readme",
+  "dependencies": {
+    "chalk": "^2.4.2"
+  }
 }
