@@ -1,6 +1,7 @@
 const path = require('path')
 const { execSync } = require('child_process')
 const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./consts')
+const { warning, error, success, info } = require('./log-theme')
 
 /**
  * Load package meta file from path
@@ -71,10 +72,10 @@ const transferDependencies = (source, target, args = []) => {
   }
 
   const packageCount = newDeps.length
-  console.log('Found', packageCount, packageCount ? 'packages:' : 'packages')
+  console.log(info('Found', packageCount, packageCount ? 'packages:' : 'packages'))
 
   if (!packageCount) {
-    console.log('Nothing to install!')
+    console.warn(warning('Nothing to install!'))
 
     process.exit(0)
   }
@@ -86,14 +87,14 @@ const transferDependencies = (source, target, args = []) => {
     output: process.stdout
   })
 
-  readline.question('Install above packages into target package? ', answer => {
+  readline.question(info('Install above packages into target package? '), answer => {
     if (CONFIRMATIONS.indexOf(answer) > -1) {
       readline.close()
 
       try {
         execSync(installCommand, { stdio: 'inherit' })
 
-        console.log('Transfer completed!')
+        console.log(success('Transfer completed!'))
         process.exit(0)
       } catch (e) {
         if (e.signal !== 'SIGINT') {
