@@ -6,8 +6,8 @@ const success = chalk.bold.green
 const info = chalk.bold
 
 module.exports = {
-  error,
-  warning,
-  success,
-  info
+    error,
+    warning,
+    success,
+    info
 }

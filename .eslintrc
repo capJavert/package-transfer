@@ -19,6 +19,7 @@
         "global-require": "off",
         "semi": "off",
         "comma-dangle": "off",
-        "import/no-dynamic-require": "off"
+        "import/no-dynamic-require": "off",
+        "indent": ["error", 4]
     }
 }
