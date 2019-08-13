@@ -1,7 +1,9 @@
 const path = require('path')
 const { execSync } = require('child_process')
 const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./consts')
-const { warning, error, success, info } = require('./log-theme')
+const {
+  warning, success, info
+} = require('./log-theme')
 
 /**
  * Load package meta file from path
@@ -9,7 +11,7 @@ const { warning, error, success, info } = require('./log-theme')
  * @param  {string} packagePath
  * @return {object}
  */
-getPackageJson = packagePath => {
+const getPackageJson = (packagePath) => {
   if (packagePath === '.') {
     return require(path.join(process.cwd(), PACKAGE_META_FILE))
   }
@@ -17,8 +19,8 @@ getPackageJson = packagePath => {
   return require(path.join(
     path.isAbsolute(packagePath) ? '' : process.cwd(),
     packagePath,
-    packagePath.indexOf(PACKAGE_META_FILE) === -1 ? PACKAGE_META_FILE : '')
-  )
+    packagePath.indexOf(PACKAGE_META_FILE) === -1 ? PACKAGE_META_FILE : ''
+  ))
 }
 
 /**
@@ -60,10 +62,9 @@ const transferDependencies = (source, target, args = []) => {
   const { [depKey]: sourceDependencies = {} } = source
   const { [depKey]: destDependencies = {} } = target
 
-  const newDeps = Object.keys(sourceDependencies).filter(dep => !destDependencies[dep])
-  let installCommand =
-    (useYarn ? 'yarn add ' : 'npm install ') +
-    newDeps.join(' ')
+  const newDeps = Object.keys(sourceDependencies).filter((dep) => !destDependencies[dep])
+  let installCommand = (useYarn ? 'yarn add ' : 'npm install ')
+    + newDeps.join(' ')
 
   if (dev) {
     installCommand += useYarn ? ' --dev' : ' --save-dev'
@@ -80,14 +81,14 @@ const transferDependencies = (source, target, args = []) => {
     process.exit(0)
   }
 
-  newDeps.forEach(dep => console.log('    ' + dep + '@' + sourceDependencies[dep]))
+  newDeps.forEach((dep) => console.log(`    ${dep}@${sourceDependencies[dep]}`))
 
   const readline = require('readline').createInterface({
     input: process.stdin,
     output: process.stdout
   })
 
-  readline.question(info('Install above packages into target package? '), answer => {
+  readline.question(info('Install above packages into target package? '), (answer) => {
     if (CONFIRMATIONS.indexOf(answer) > -1) {
       readline.close()
 

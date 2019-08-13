@@ -4,7 +4,8 @@
   "description": "Simple utility to transfer packages from your dependencies or devDependencies lists into new project.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "lint": "eslint --max-warnings=0 index.js src"
   },
   "bin": {
     "pkg-transfer": "./index.js",
@@ -25,5 +26,10 @@
   "homepage": "https://github.com/capJavert/package-transfer#readme",
   "dependencies": {
     "chalk": "^2.4.2"
+  },
+  "devDependencies": {
+    "eslint": "^6.1.0",
+    "eslint-config-airbnb-base": "^14.0.0",
+    "eslint-plugin-import": "^2.18.2"
   }
 }

@@ -2,9 +2,12 @@
 
 const fs = require('fs')
 const path = require('path')
-const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./consts')
-const { getPackageJson, getArg, hasArg, transferDependencies } = require('./utils')
-const { warning, error, info } = require('./log-theme')
+const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./src/consts')
+const {
+  getPackageJson, getArg, hasArg, transferDependencies,
+} = require('./src/utils')
+const { warning, error, info } = require('./src/log-theme')
+
 const args = process.argv.slice(2)
 
 // exit listener
@@ -50,13 +53,13 @@ try {
     console.warn(warning('Target package is not set!'))
 
     const pwd = path.join(process.cwd(), PACKAGE_META_FILE)
-    if(fs.existsSync(pwd)) {
+    if (fs.existsSync(pwd)) {
       const readline = require('readline').createInterface({
         input: process.stdin,
-        output: process.stdout
+        output: process.stdout,
       })
 
-      readline.question(info('Use current project? '), answer => {
+      readline.question(info('Use current project? '), (answer) => {
         readline.close()
 
         if (CONFIRMATIONS.indexOf(answer) > -1) {
@@ -72,7 +75,7 @@ try {
       if (verbose) {
         console.error(e)
       }
-      console.error(error('There is no valid ' + PACKAGE_META_FILE + ' inside specified target.'))
+      console.error(error(`There is no valid ${PACKAGE_META_FILE} inside specified target.`))
       console.error(error('Path:', target))
 
       process.exit(1)
@@ -82,7 +85,7 @@ try {
   if (verbose) {
     console.error(e)
   }
-  console.error(error('There is no valid ' + PACKAGE_META_FILE + ' inside specified source.'))
+  console.error(error(`There is no valid ${PACKAGE_META_FILE} inside specified source.`))
   console.error(error('Path:', source))
 
   process.exit(1)
