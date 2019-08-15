@@ -3,7 +3,17 @@ const {
     getPackageJson,
     getArg,
     hasArg,
+    extractDependencies,
+    createInstallCommand
 } = require('../src/utils')
+
+test('module is defined', () => {
+    expect(getPackageJson).toBeDefined()
+    expect(getArg).toBeDefined()
+    expect(hasArg).toBeDefined()
+    expect(extractDependencies).toBeDefined()
+    expect(createInstallCommand).toBeDefined()
+})
 
 test('detect when argument exists', () => {
     const args = ['node', 'index.js', '-s', '../old-project', '--dev']
