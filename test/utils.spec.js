@@ -20,11 +20,6 @@ test('detect when argument exists', () => {
 
     expect(hasArg('--dev', args)).toBe(true)
     expect(hasArg('-s', args)).toBe(true)
-})
-
-test('detect when argument does not exist', () => {
-    const args = ['node', 'index.js', '-s', '../old-project', '--dev']
-
     expect(hasArg('--verbose', args)).toBe(false)
 })
 
@@ -32,14 +27,23 @@ test('get argument value', () => {
     const args = ['node', 'index.js', '-s', '../old-project', '--dev']
 
     expect(getArg('-s', args)).toBe('../old-project')
+    expect(getArg('-t', args)).toBeUndefined()
 })
 
 test('get file with relative path', () => {
     expect(getPackageJson('./package.json')).toBeDefined()
 })
 
+test('get file inside current directory', () => {
+    expect(getPackageJson('.')).toBeDefined()
+})
+
 test('get file with absolute path', () => {
     expect(getPackageJson(path.join(__dirname, '../package.json'))).toBeDefined()
+})
+
+test('get directory with absolute path', () => {
+    expect(getPackageJson(path.join(__dirname, '../'))).toBeDefined()
 })
 
 test('extracts dependencies', () => {
@@ -121,6 +125,12 @@ test('extract respects --dev flag', () => {
         'nodemon',
         'express-redis-cache'
     ])
+})
+
+test('extract when no dependencies are found', () => {
+    const [newDeps] = extractDependencies({}, {})
+
+    expect(newDeps).toEqual([])
 })
 
 test('creates install command', () => {
