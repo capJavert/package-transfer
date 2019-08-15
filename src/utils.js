@@ -1,9 +1,5 @@
 const path = require('path')
-const { execSync } = require('child_process')
-const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./consts')
-const {
-    warning, success, info
-} = require('./log-theme')
+const { PACKAGE_META_FILE } = require('./consts')
 
 /**
 * Load package meta file from path
@@ -48,23 +44,39 @@ const hasArg = (name, args) => {
 }
 
 /**
-* Transfer dependencies from source to target
-* This method runs npm or yarn install
+* Extract dependencies from source to target
+* This method returns new dependencies for target
 *
 * @param source
 * @param target
 * @param  {Array}  [args=[]]
+* @return {Array} dependencies array
 */
-const transferDependencies = (source, target, args = []) => {
+const extractDependencies = (source, target, args = []) => {
     const dev = hasArg('--dev', args)
-    const useYarn = hasArg('--yarn', args)
     const depKey = dev ? 'devDependencies' : 'dependencies'
     const { [depKey]: sourceDependencies = {} } = source
     const { [depKey]: destDependencies = {} } = target
 
-    const newDeps = Object.keys(sourceDependencies).filter((dep) => !destDependencies[dep])
+    return [
+        Object.keys(sourceDependencies).filter((dep) => !destDependencies[dep]),
+        sourceDependencies
+    ]
+}
+
+/**
+ * Method creates install command for selected package manager
+ *
+ * @param  {Array} deps
+ * @param  {Array} args
+ * @return {string}
+ */
+const createInstallCommand = (deps, args = []) => {
+    const dev = hasArg('--dev', args)
+    const useYarn = hasArg('--yarn', args)
+
     let installCommand = (useYarn ? 'yarn add ' : 'npm install ')
-    + newDeps.join(' ')
+    + deps.join(' ')
 
     if (dev) {
         installCommand += useYarn ? ' --dev' : ' --save-dev'
@@ -72,49 +84,13 @@ const transferDependencies = (source, target, args = []) => {
         installCommand += ' --save'
     }
 
-    const packageCount = newDeps.length
-    console.log(info('Found', packageCount, packageCount ? 'packages:' : 'packages'))
-
-    if (!packageCount) {
-        console.warn(warning('Nothing to install!'))
-
-        process.exit(0)
-    }
-
-    newDeps.forEach((dep) => console.log(`    ${dep}@${sourceDependencies[dep]}`))
-
-    const readline = require('readline').createInterface({
-        input: process.stdin,
-        output: process.stdout
-    })
-
-    readline.question(info('Install above packages into target package? '), (answer) => {
-        if (CONFIRMATIONS.indexOf(answer) > -1) {
-            readline.close()
-
-            try {
-                execSync(installCommand, { stdio: 'inherit' })
-
-                console.log(success('Transfer completed!'))
-                process.exit(0)
-            } catch (e) {
-                if (e.signal !== 'SIGINT') {
-                    console.error(e)
-                }
-
-                process.exit(1)
-            }
-        } else {
-            console.log('Install canceled!')
-
-            process.exit(0)
-        }
-    })
+    return installCommand
 }
 
 module.exports = {
     getPackageJson,
     getArg,
     hasArg,
-    transferDependencies
+    extractDependencies,
+    createInstallCommand
 }

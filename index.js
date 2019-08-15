@@ -2,11 +2,14 @@
 
 const fs = require('fs')
 const path = require('path')
+const { execSync } = require('child_process')
 const { CONFIRMATIONS, PACKAGE_META_FILE } = require('./src/consts')
 const {
-    getPackageJson, getArg, hasArg, transferDependencies,
+    getPackageJson, getArg, hasArg, extractDependencies, createInstallCommand,
 } = require('./src/utils')
-const { warning, error, info } = require('./src/log-theme')
+const {
+    warning, error, success, info, placeholder
+} = require('./src/log-theme')
 
 const args = process.argv.slice(2)
 
@@ -45,6 +48,49 @@ if (!source) {
     process.exit(0)
 }
 
+const transferDependencies = (sourcePackage, targetPackage) => {
+    const [newDeps, sourceDeps] = extractDependencies(sourcePackage, targetPackage, args)
+    const packageCount = newDeps.length
+
+    console.log(info('Found', packageCount, packageCount ? 'packages:' : 'packages'))
+
+    if (!packageCount) {
+        console.warn(warning('Nothing to install!'))
+
+        process.exit(0)
+    }
+
+    newDeps.forEach((dep) => console.log(`    ${dep}@${sourceDeps[dep]}`))
+
+    const readline = require('readline').createInterface({
+        input: process.stdin,
+        output: process.stdout
+    })
+
+    readline.question(`${info('Install above packages into target package?')} (${placeholder('yes')}) `, (answer = 'yes') => {
+        if (CONFIRMATIONS.indexOf(answer || 'yes') > -1) {
+            readline.close()
+
+            try {
+                execSync(createInstallCommand(newDeps, args), { stdio: 'inherit' })
+
+                console.log(success('Transfer completed!'))
+                process.exit(0)
+            } catch (e) {
+                if (e.signal !== 'SIGINT') {
+                    console.error(e)
+                }
+
+                process.exit(1)
+            }
+        } else {
+            console.log('Install canceled!')
+
+            process.exit(0)
+        }
+    })
+}
+
 try {
     const sourcePackage = getPackageJson(source)
     const target = getArg('--target', args) || getArg('-t', args)
@@ -59,18 +105,18 @@ try {
                 output: process.stdout,
             })
 
-            readline.question(info('Use current project? '), (answer) => {
+            readline.question(`${info('Use current project?')} (${placeholder('yes')}) `, (answer) => {
                 readline.close()
 
-                if (CONFIRMATIONS.indexOf(answer) > -1) {
-                    transferDependencies(sourcePackage, getPackageJson(pwd), args)
+                if (CONFIRMATIONS.indexOf(answer || 'yes') > -1) {
+                    transferDependencies(sourcePackage, getPackageJson(pwd))
                 }
             })
         }
     } else {
         try {
             const targetPackage = getPackageJson(target)
-            transferDependencies(sourcePackage, targetPackage, args)
+            transferDependencies(sourcePackage, targetPackage)
         } catch (e) {
             if (verbose) {
                 console.error(e)
