@@ -89,6 +89,7 @@ const transferDependencies = (sourcePackage, targetPackage) => {
             process.exit(0)
         }
     })
+    readline.write('yes')
 }
 
 try {
@@ -112,6 +113,7 @@ try {
                     transferDependencies(sourcePackage, getPackageJson(pwd))
                 }
             })
+            readline.write('yes')
         }
     } else {
         try {
