@@ -44,8 +44,8 @@ const hasArg = (name, args) => {
 }
 
 /**
-* Transfer dependencies from source to target
-* This method runs npm or yarn install
+* Extract dependencies from source to target
+* This method returns new dependencies for target
 *
 * @param source
 * @param target
@@ -64,7 +64,14 @@ const extractDependencies = (source, target, args = []) => {
     ]
 }
 
-const createInstallCommand = (deps, args) => {
+/**
+ * Method creates install command for selected package manager
+ *
+ * @param  {Array} deps
+ * @param  {Array} args
+ * @return {string}
+ */
+const createInstallCommand = (deps, args = []) => {
     const dev = hasArg('--dev', args)
     const useYarn = hasArg('--yarn', args)
 
