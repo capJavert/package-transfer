@@ -8,7 +8,7 @@ const {
     getPackageJson, getArg, hasArg, extractDependencies, createInstallCommand,
 } = require('./src/utils')
 const {
-    warning, error, success, info
+    warning, error, success, info, placeholder
 } = require('./src/log-theme')
 
 const args = process.argv.slice(2)
@@ -67,8 +67,8 @@ const transferDependencies = (sourcePackage, targetPackage) => {
         output: process.stdout
     })
 
-    readline.question(info('Install above packages into target package? '), (answer) => {
-        if (CONFIRMATIONS.indexOf(answer) > -1) {
+    readline.question(`${info('Install above packages into target package?')} (${placeholder('yes')}) `, (answer = 'yes') => {
+        if (CONFIRMATIONS.indexOf(answer || 'yes') > -1) {
             readline.close()
 
             try {
@@ -89,7 +89,6 @@ const transferDependencies = (sourcePackage, targetPackage) => {
             process.exit(0)
         }
     })
-    readline.write('yes')
 }
 
 try {
@@ -106,14 +105,13 @@ try {
                 output: process.stdout,
             })
 
-            readline.question(info('Use current project? '), (answer) => {
+            readline.question(`${info('Use current project?')} (${placeholder('yes')}) `, (answer) => {
                 readline.close()
 
-                if (CONFIRMATIONS.indexOf(answer) > -1) {
+                if (CONFIRMATIONS.indexOf(answer || 'yes') > -1) {
                     transferDependencies(sourcePackage, getPackageJson(pwd))
                 }
             })
-            readline.write('yes')
         }
     } else {
         try {
