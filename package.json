@@ -6,6 +6,7 @@
     "scripts": {
         "test": "jest --verbose",
         "test:coverage": "jest --collect-coverage",
+        "test:upload-coverage": "jest --coverage --coverageReporters=text-lcov | coveralls",
         "lint": "eslint --max-warnings=0 index.js src"
     },
     "bin": {
@@ -29,6 +30,7 @@
         "chalk": "^2.4.2"
     },
     "devDependencies": {
+        "coveralls": "^3.0.6",
         "eslint": "^6.1.0",
         "eslint-config-airbnb-base": "^14.0.0",
         "eslint-plugin-import": "^2.18.2",

@@ -1,6 +1,7 @@
 # package-transfer
 
 [![Build Status](https://travis-ci.org/capJavert/package-transfer.svg?branch=master)](https://travis-ci.org/capJavert/package-transfer)
+[![Coverage Status](https://coveralls.io/repos/github/capJavert/package-transfer/badge.svg)](https://coveralls.io/github/capJavert/package-transfer)
 
 Simple utility to transfer packages from your dependencies or devDependencies lists into new project.
 
