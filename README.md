@@ -45,3 +45,4 @@ Options:<br>
   -t, --target               **Target package (defaults to current directory)**<br>
   --yarn                     **Use yarn instead of npm**<br>
   --dev                      **Transfer devDependencies**<br>
+  --dry-run                  **Just prints install command, does NOT really install anything**<br>

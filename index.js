@@ -36,11 +36,13 @@ if (hasArg('--help', args) || hasArg('-h', args)) {
     console.log('  -t, --target               Target package (defaults to current directory)')
     console.log('  --yarn                     Use yarn instead of npm')
     console.log('  --dev                      Transfer devDependencies')
+    console.log('  --dry-run                  Just prints install command, does NOT really install anything')
 
     process.exit(0)
 }
 
 const verbose = hasArg('--verbose', args)
+const dryRun = hasArg('--dry-run', args)
 const source = getArg('--source', args) || getArg('-s', args)
 if (!source) {
     console.warn(warning('Specify source package path with --source'))
@@ -61,6 +63,12 @@ const transferDependencies = (sourcePackage, targetPackage) => {
     }
 
     newDeps.forEach((dep) => console.log(`    ${dep}@${sourceDeps[dep]}`))
+
+    if (dryRun) {
+        console.log()
+        console.log(createInstallCommand(newDeps, args))
+        return
+    }
 
     const readline = require('readline').createInterface({
         input: process.stdin,
