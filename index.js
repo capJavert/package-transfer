@@ -37,6 +37,7 @@ if (hasArg('--help', args) || hasArg('-h', args)) {
     console.log('  --yarn                     Use yarn instead of npm')
     console.log('  --dev                      Transfer devDependencies')
     console.log('  --dry-run                  Just prints install command, does NOT really install anything')
+    console.log('  --strict                   Use exact versions from source package.json when installing dependencies')
 
     process.exit(0)
 }
@@ -44,6 +45,7 @@ if (hasArg('--help', args) || hasArg('-h', args)) {
 const verbose = hasArg('--verbose', args)
 const dryRun = hasArg('--dry-run', args)
 const source = getArg('--source', args) || getArg('-s', args)
+const isStrict = hasArg('--strict', args)
 if (!source) {
     console.warn(warning('Specify source package path with --source'))
 
@@ -62,11 +64,11 @@ const transferDependencies = (sourcePackage, targetPackage) => {
         process.exit(0)
     }
 
-    newDeps.forEach((dep) => console.log(`    ${dep}@${sourceDeps[dep]}`))
+    newDeps.forEach((dep) => console.log(isStrict ? `    ${dep}@${sourceDeps[dep]}` : `    ${dep}`))
 
     if (dryRun) {
         console.log()
-        console.log(createInstallCommand(newDeps, args))
+        console.log(createInstallCommand(newDeps, sourceDeps, args))
         return
     }
 
@@ -80,7 +82,7 @@ const transferDependencies = (sourcePackage, targetPackage) => {
             readline.close()
 
             try {
-                execSync(createInstallCommand(newDeps, args), { stdio: 'inherit' })
+                execSync(createInstallCommand(newDeps, sourceDeps, args), { stdio: 'inherit' })
 
                 console.log(success('Transfer completed!'))
                 process.exit(0)

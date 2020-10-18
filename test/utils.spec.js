@@ -141,8 +141,15 @@ test('creates install command', () => {
         'debug',
         'express'
     ]
+    const sourceDeps = {
+        'body-parser': '1.0.3',
+        'cookie-parser': '0.7.0',
+        cors: '0.0.1',
+        debug: '^6.6.6',
+        express: '^1.4.4'
+    }
 
-    const installCommand = createInstallCommand(newDeps)
+    const installCommand = createInstallCommand(newDeps, sourceDeps)
 
     expect(installCommand).toEqual('npm install body-parser cookie-parser cors debug express --save')
 })
@@ -155,8 +162,15 @@ test('create respects --dev flag', () => {
         'debug',
         'express'
     ]
+    const sourceDeps = {
+        'body-parser': '1.0.3',
+        'cookie-parser': '0.7.0',
+        cors: '0.0.1',
+        debug: '^6.6.6',
+        express: '^1.4.4'
+    }
 
-    const installCommand = createInstallCommand(newDeps, ['--dev'])
+    const installCommand = createInstallCommand(newDeps, sourceDeps, ['--dev'])
 
     expect(installCommand).toEqual('npm install body-parser cookie-parser cors debug express --save-dev')
 })
@@ -169,8 +183,15 @@ test('create respects --yarn flag', () => {
         'debug',
         'express'
     ]
+    const sourceDeps = {
+        'body-parser': '1.0.3',
+        'cookie-parser': '0.7.0',
+        cors: '0.0.1',
+        debug: '^6.6.6',
+        express: '^1.4.4'
+    }
 
-    const installCommand = createInstallCommand(newDeps, ['--yarn'])
+    const installCommand = createInstallCommand(newDeps, sourceDeps, ['--yarn'])
 
     expect(installCommand).toEqual('yarn add body-parser cookie-parser cors debug express')
 })
@@ -183,8 +204,36 @@ test('create respects --yarn and --dev flags', () => {
         'debug',
         'express'
     ]
+    const sourceDeps = {
+        'body-parser': '1.0.3',
+        'cookie-parser': '0.7.0',
+        cors: '0.0.1',
+        debug: '^6.6.6',
+        express: '^1.4.4'
+    }
 
-    const installCommand = createInstallCommand(newDeps, ['--yarn', '--dev'])
+    const installCommand = createInstallCommand(newDeps, sourceDeps, ['--yarn', '--dev'])
 
     expect(installCommand).toEqual('yarn add body-parser cookie-parser cors debug express --dev')
+})
+
+test('create respects --strict flag', () => {
+    const newDeps = [
+        'body-parser',
+        'cookie-parser',
+        'cors',
+        'debug',
+        'express'
+    ]
+    const sourceDeps = {
+        'body-parser': '1.0.3',
+        'cookie-parser': '0.7.0',
+        cors: '0.0.1',
+        debug: '^6.6.6',
+        express: '^1.4.4'
+    }
+
+    const installCommand = createInstallCommand(newDeps, sourceDeps, ['--strict'])
+
+    expect(installCommand).toEqual('npm install body-parser@1.0.3 cookie-parser@0.7.0 cors@0.0.1 debug@^6.6.6 express@^1.4.4 --save')
 })

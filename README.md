@@ -34,6 +34,14 @@ If you prefer `yarn` over `npm`:
 pkg-transfer -s ../old-project --yarn
 ```
 
+## Strict mode
+
+Most of the time you are locking your package.json dependencies to exact version. If you wish to transfer those exact versions to target package.json then just use `--strict` argument.
+
+```
+pkg-transfer -s ../my-project --strict
+```
+
 ## Help
 Usage: pkg-transfer [options]
 
@@ -46,3 +54,4 @@ Options:<br>
   --yarn                     **Use yarn instead of npm**<br>
   --dev                      **Transfer devDependencies**<br>
   --dry-run                  **Just prints install command, does NOT really install anything**<br>
+  --strict                   **Use exact versions from source package.json when installing dependencies**<br>

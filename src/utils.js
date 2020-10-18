@@ -67,13 +67,17 @@ const extractDependencies = (source, target, args = []) => {
 /**
  * Method creates install command for selected package manager
  *
- * @param  {Array} deps
+ * @param  {Array} newDeps
+ * @param  {Object} sourceDeps
  * @param  {Array} args
  * @return {string}
  */
-const createInstallCommand = (deps, args = []) => {
+const createInstallCommand = (newDeps, sourceDeps, args = []) => {
     const dev = hasArg('--dev', args)
     const useYarn = hasArg('--yarn', args)
+    const isStrict = hasArg('--strict', args)
+
+    const deps = isStrict ? newDeps.map((dep) => `${dep}@${sourceDeps[dep]}`) : newDeps
 
     let installCommand = (useYarn ? 'yarn add ' : 'npm install ')
     + deps.join(' ')
